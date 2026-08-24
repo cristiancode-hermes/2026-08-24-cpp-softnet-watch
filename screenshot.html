@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>softnet-watch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1e1e2e; font-family: 'Fira Code', monospace; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 40px 20px; }
+  .terminal {
+    background: #181825;
+    border-radius: 12px;
+    padding: 24px 32px;
+    color: #cdd6f4;
+    font-size: 13.5px;
+    line-height: 1.55;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    max-width: 980px;
+    width: 100%;
+  }
+  .cyan { color: #89dceb; }
+  .green { color: #a6e3a1; }
+  .yellow { color: #f9e2af; }
+  .red { color: #f38ba8; }
+  .dim { color: #6c7086; }
+  .magenta { color: #cba6f7; }
+  .blue { color: #89b4fa; }
+  .bold { font-weight: 600; }
+  .header-box { border: 2px solid #89dceb; border-radius: 8px; padding: 12px 20px; margin-bottom: 18px; }
+  .header-box .title { color: #89dceb; font-size: 15px; font-weight: 600; }
+  .header-box .sub { color: #6c7086; font-size: 12px; margin-top: 4px; }
+  .section-title { color: #cdd6f4; font-weight: 600; margin-top: 14px; margin-bottom: 8px; }
+  .agg-row { display: flex; gap: 18px; margin-bottom: 6px; flex-wrap: wrap; }
+  .agg-label { color: #6c7086; font-size: 11px; }
+  .agg-value { color: #cdd6f4; font-size: 15px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12.5px; }
+  th { color: #6c7086; text-align: left; font-weight: 400; padding: 4px 6px; border-bottom: 1px solid #45475a; font-size: 11px; }
+  td { padding: 4px 6px; white-space: nowrap; }
+  .notes { margin-top: 14px; color: #6c7086; font-size: 11px; line-height: 1.5; }
+  .prompt { margin-top: 16px; color: #a6e3a1; font-size: 12px; }
+  .tag { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #313244; margin-left: 4px; }
+  .tag-hot { color: #f38ba8; }
+  .tag-warn { color: #f9e2af; }
+  .tag-ok { color: #a6e3a1; }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <div class="header-box">
+    <div class="title">+================================================+</div>
+    <div class="title">|   Linux softnet / NAPI per-CPU RX Monitor    |</div>
+    <div class="title">+================================================+</div>
+    <div class="sub">Source: /proc/net/softnet_stat &nbsp;·&nbsp; Snapshot: 2026-08-24 05:02:18 &nbsp;·&nbsp; 8 CPUs &nbsp;·&nbsp; --demo</div>
+  </div>
+
+  <div class="section-title">-- KPIs --</div>
+  <div class="agg-row">
+    <div>
+      <div class="agg-label">processed</div>
+      <div class="agg-value cyan">205.91M</div>
+    </div>
+    <div>
+      <div class="agg-label">dropped</div>
+      <div class="agg-value red">30</div>
+    </div>
+    <div>
+      <div class="agg-label">squeeze</div>
+      <div class="agg-value yellow">46.1k</div>
+    </div>
+    <div>
+      <div class="agg-label">RPS wakes</div>
+      <div class="agg-value blue">20</div>
+    </div>
+    <div>
+      <div class="agg-label">flow_limit</div>
+      <div class="agg-value red">1</div>
+    </div>
+    <div>
+      <div class="agg-label">backlog</div>
+      <div class="agg-value yellow">4</div>
+    </div>
+    <div>
+      <div class="agg-label">alerts</div>
+      <div class="agg-value red">7</div>
+    </div>
+    <div>
+      <div class="agg-label">hottest CPU</div>
+      <div class="agg-value magenta">cpu3</div>
+    </div>
+    <div>
+      <div class="agg-label">most drops</div>
+      <div class="agg-value red">cpu1</div>
+    </div>
+  </div>
+
+  <div class="section-title">-- Per-CPU NAPI --</div>
+  <table>
+    <tr>
+      <th>cpu</th><th>processed</th><th>dropped</th><th>squeeze</th><th>rps</th><th>flow</th><th>back</th><th>inq</th><th>health</th>
+    </tr>
+    <tr>
+      <td class="cyan">0</td>
+      <td class="cyan">45.23M</td>
+      <td>0</td>
+      <td class="yellow">12.7k</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td><span class="tag tag-warn">WARN</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">1</td>
+      <td class="cyan">46.49M</td>
+      <td class="red">18</td>
+      <td class="yellow">12.8k</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td><span class="tag tag-hot">HOT</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">2</td>
+      <td class="cyan">27.33M</td>
+      <td>0</td>
+      <td class="yellow">4227</td>
+      <td>0</td>
+      <td>0</td>
+      <td class="yellow">3</td>
+      <td class="yellow">2</td>
+      <td><span class="tag tag-hot">HOT</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">3</td>
+      <td class="cyan">51.63M</td>
+      <td class="red">3</td>
+      <td class="yellow">13.3k</td>
+      <td>0</td>
+      <td class="red">1</td>
+      <td>0</td>
+      <td>0</td>
+      <td><span class="tag tag-hot">HOT</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">4</td>
+      <td>15.73M</td>
+      <td>0</td>
+      <td class="yellow">32</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td><span class="tag tag-warn">WARN</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">5</td>
+      <td>4.20M</td>
+      <td class="red">8</td>
+      <td class="yellow">256</td>
+      <td>16</td>
+      <td>0</td>
+      <td class="yellow">1</td>
+      <td>0</td>
+      <td><span class="tag tag-hot">HOT</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">6</td>
+      <td>703.7k</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td><span class="tag tag-ok">OK</span></td>
+    </tr>
+    <tr>
+      <td class="cyan">7</td>
+      <td>14.57M</td>
+      <td class="red">1</td>
+      <td class="yellow">2.73k</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td><span class="tag tag-hot">HOT</span></td>
+    </tr>
+  </table>
+
+  <div class="notes">
+    Reads /proc/net/softnet_stat · 13-col (6.8) + 15-col layouts · health OK/WARN/HOT<br>
+    Watch deltas + pkt/s · JSON cpus[] · C++23 zero deps
+  </div>
+  <div class="prompt">$ ./softnet-watch --demo<span class="dim"> ▍</span></div>
+</div>
+</body>
+</html>
